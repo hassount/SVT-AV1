@@ -172,7 +172,10 @@ int32_t main(int32_t argc, char *argv[]) {
     void *           p_app_data = NULL;
 
     return_error |= svt_av1_dec_init_handle(&p_handle, p_app_data, config_ptr);
-    if (return_error != EB_ErrorNone) goto fail;
+    if (return_error != EB_ErrorNone) {
+        return_error |= svt_av1_dec_deinit_handle(p_handle);
+        goto fail;
+    }
 
     if (read_command_line(argc, argv, config_ptr, &cli, &obu_ctx) == 0 &&
         !svt_av1_dec_set_parameter(p_handle, config_ptr)) {
@@ -241,6 +244,7 @@ int32_t main(int32_t argc, char *argv[]) {
                     break;
             }
             if (fps_summary || fps_frm) {
+                assert(dx_time > 0);
                 show_progress(in_frame, dx_time);
                 fprintf(stderr, "\n");
             }

@@ -2310,7 +2310,7 @@ static INLINE void calc_target_weighted_pred_above(uint8_t is16bit, MacroBlockD 
 
     const int            bw     = xd->n4_w << MI_SIZE_LOG2;
     const uint8_t *const mask1d = eb_av1_get_obmc_mask(ctxt->overlap);
-
+    assert(mask1d != NULL);
     int32_t *      wsrc = ctxt->wsrc_buf + (rel_mi_col * MI_SIZE);
     int32_t *      mask = ctxt->mask_buf + (rel_mi_col * MI_SIZE);
     const uint8_t *tmp  = ctxt->tmp + rel_mi_col * MI_SIZE;
@@ -2345,7 +2345,7 @@ static INLINE void calc_target_weighted_pred_left(uint8_t is16bit, MacroBlockD *
     int32_t *      wsrc = ctxt->wsrc_buf + (rel_mi_row * MI_SIZE * bw);
     int32_t *      mask = ctxt->mask_buf + (rel_mi_row * MI_SIZE * bw);
     const uint8_t *tmp  = ctxt->tmp + (rel_mi_row * MI_SIZE * ctxt->tmp_stride);
-
+    assert(mask1d != NULL);
     {
         for (int row = 0; row < nb_mi_height * MI_SIZE; ++row) {
             for (int col = 0; col < ctxt->overlap; ++col) {

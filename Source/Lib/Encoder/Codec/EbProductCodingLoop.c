@@ -4238,7 +4238,7 @@ static INLINE void heap_sort_stage_max_node_fast_cost_ptr(ModeDecisionCandidateB
         uint32_t left  = 2 * i;
         uint32_t right = 2 * i + 1;
         uint32_t max = i;
-
+        assert(left < MAX_NFL);
         if (left <= num &&
             *(buffer_ptr[sort_index[left]]->fast_cost_ptr) >
                 *(buffer_ptr[sort_index[i]]->fast_cost_ptr)) {

@@ -262,7 +262,7 @@ int svt_dec_out_buf(EbDecHandle *dec_handle_ptr, EbBufferHeaderType *p_buffer) {
                 uint16_t *pu2_src;
                 uint32_t  j;
                 ASSERT(recon_picture_buf->is_16bit_pipeline);
-
+                ASSERT(luma != NULL);
                 /* Luma */
                 dst = luma;
                 pu2_src = (uint16_t *)recon_picture_buf->buffer_y + recon_picture_buf->origin_x +
@@ -276,6 +276,7 @@ int svt_dec_out_buf(EbDecHandle *dec_handle_ptr, EbBufferHeaderType *p_buffer) {
                 }
 
                 if (recon_picture_buf->color_format != EB_YUV400) {
+                    ASSERT(cb != NULL);
                     /* Cb */
                     dst = cb;
                     pu2_src = (uint16_t *)recon_picture_buf->buffer_cb +
@@ -288,7 +289,7 @@ int svt_dec_out_buf(EbDecHandle *dec_handle_ptr, EbBufferHeaderType *p_buffer) {
                         dst += out_img->cb_stride;
                         pu2_src += recon_picture_buf->stride_cb;
                     }
-
+                    ASSERT(cr != NULL);
                     /* Cr */
                     dst = cr;
                     pu2_src = (uint16_t *)recon_picture_buf->buffer_cr +

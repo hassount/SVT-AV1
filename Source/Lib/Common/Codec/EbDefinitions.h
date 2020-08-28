@@ -551,6 +551,7 @@ extern "C" {
 #define REMOVE_OLD_NSQ_CR                1 // remove old NSQ cycles reduction feature (replaced by adaptive_md_cycles_level)
 #define REMOVE_OLD_DEPTH_CR              1 // remove old depth cycles reduction feature (replaced by adaptive_md_cycles_level)
 #endif
+#define TPL_C_FIX  1
 #define REMOVE_TF_REF_PRUNING_FUNCS      1 // remove redundant functions for setting TF ref pruning settings (which are always off)
 #endif
 

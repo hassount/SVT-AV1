@@ -1279,7 +1279,7 @@ void tpl_mc_flow_dispenser(
                         }
                     } // rf_idx
                     if(best_inter_cost < INT64_MAX) {
-                        uint16_t eob;
+                        uint16_t eob = 0;
                         get_quantize_error(&mb_plane, best_coeff, qcoeff, dqcoeff, tx_size, &eob, &recon_error, &sse);
 #if TPL_OPT
                         int rate_cost = pcs_ptr->tpl_opt_flag? 0 : rate_estimator(qcoeff, eob, tx_size);
@@ -1383,7 +1383,7 @@ void tpl_mc_flow_dispenser(
                     eb_aom_subtract_block(16, 16, src_diff, 16, src_mb, input_picture_ptr->stride_y, dst_buffer, dst_buffer_stride);
                     svt_av1_wht_fwd_txfm(src_diff, 16, coeff, tx_size, 8, 0);
 
-                    uint16_t eob;
+                    uint16_t eob = 0;
 
                     get_quantize_error(&mb_plane, coeff, qcoeff, dqcoeff, tx_size, &eob, &recon_error, &sse);
 #if TPL_OPT

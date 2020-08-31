@@ -525,6 +525,8 @@ extern "C" {
 #define SHIFT_PRESETS                   1 // M5->M4, M6->M5, M8->M6
 #define AUG5_ADOPTS                     1 // Adoptions for MR and M2
 
+#define FIX_TPL_ME_ACCESS    1 //fixes access of ME results in TPL
+#define FIX_TPL_REF_OBJ      1 //fixes access of pa ref obj-lossless
 #define FIX_TPL_POC128       1 // Fixed TPL poc128 error
 #define TWOPASS_RC           1 // Refine 2pass RC VBR from libaom
 #if TWOPASS_RC

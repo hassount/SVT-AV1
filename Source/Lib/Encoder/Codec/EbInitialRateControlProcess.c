@@ -1045,7 +1045,7 @@ uint8_t is_me_data_valid(
 
     for (uint32_t me_cand_i = 0; me_cand_i < total_me_cnt; ++me_cand_i) {
         const MeCandidate *me_cand = &me_block_results[me_cand_i];
-        assert(me_cand->direction >= 0 && me_cand->direction <= 2);
+        assert(/*me_cand->direction >= 0 && */me_cand->direction <= 2);
         if (me_cand->direction == 0 || me_cand->direction == 2) {
             if (list_idx == me_cand->ref0_list && ref_idx == me_cand->ref_idx_l0)
                 return 1;

@@ -1466,7 +1466,33 @@ void tpl_mc_flow_dispenser(
             }
         }
     }
+#if TPL_SANITIZER_FIX
+    #define MIN_TPL_BLOCK_SIZE 16
+    uint32_t          pad_right;
+    uint32_t          pad_bottom;
 
+    // pad non-multiple of MIN_TPL_BLOCK_SIZE (16) as these blks it not processed by TPL
+    if (input_picture_ptr->width % MIN_TPL_BLOCK_SIZE) {
+        pad_right = MIN_TPL_BLOCK_SIZE - (scs_ptr->max_input_luma_width % MIN_TPL_BLOCK_SIZE);
+    } else {
+        pad_right = 0;
+    }
+    if (input_picture_ptr->height % MIN_TPL_BLOCK_SIZE) {
+        pad_bottom = MIN_TPL_BLOCK_SIZE - (input_picture_ptr->height% MIN_TPL_BLOCK_SIZE);
+    } else {
+        pad_bottom = 0;
+    }
+
+    // padding current recon picture non-mutiple of MIN_TPL_BLOCK_SIZE
+    pad_input_picture(
+        &encode_context_ptr->mc_flow_rec_picture_buffer[frame_idx]
+            [input_picture_ptr->origin_x +input_picture_ptr->origin_y * input_picture_ptr->stride_y],
+        input_picture_ptr->stride_y,
+        (input_picture_ptr->width - pad_right),
+        (input_picture_ptr->height - pad_bottom),
+        pad_right,
+        pad_bottom);
+#endif
     // padding current recon picture
     generate_padding(
         encode_context_ptr->mc_flow_rec_picture_buffer[frame_idx],

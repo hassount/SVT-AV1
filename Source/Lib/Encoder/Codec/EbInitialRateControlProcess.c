@@ -1034,7 +1034,7 @@ extern void filter_intra_edge(OisMbResults *ois_mb_results_ptr, uint8_t mode, ui
 #if FIX_TPL_ME_ACCESS
 //Given one reference frame identified by the pair (list_index,ref_index)
 //indicate if ME data is valid
-uint8_t is_me_data_valid(
+static uint8_t is_me_data_valid(
     const MeSbResults           *me_results,
     uint32_t                     me_mb_offset,
     uint8_t                      list_idx,

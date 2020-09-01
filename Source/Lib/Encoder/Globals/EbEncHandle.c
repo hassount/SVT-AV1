@@ -2503,7 +2503,6 @@ void copy_api_from_app(
         scs_ptr->static_config.look_ahead_distance = cap_look_ahead_distance(&scs_ptr->static_config);
 #if TPL_LA
     scs_ptr->static_config.enable_tpl_la = ((EbSvtAv1EncConfiguration*)config_struct)->enable_tpl_la;
-    scs_ptr->static_config.frames_to_be_encoded = ((EbSvtAv1EncConfiguration*)config_struct)->frames_to_be_encoded;
     if (scs_ptr->static_config.enable_tpl_la && scs_ptr->static_config.look_ahead_distance > (uint32_t)0) {
 #if LAD_MEM_RED
         SVT_LOG("SVT [Warning]: force look_ahead_distance to be 16 from %d for perf/quality tradeoff when enable_tpl_la=1\n", scs_ptr->static_config.look_ahead_distance);
@@ -3216,7 +3215,6 @@ EbErrorType eb_svt_enc_init_parameter(
     config_ptr->look_ahead_distance = (uint32_t)~0;
 #if TPL_LA
     config_ptr->enable_tpl_la = 0;
-    config_ptr->frames_to_be_encoded = 0;
 #endif
     config_ptr->target_bit_rate = 7000000;
     config_ptr->max_qp_allowed = 63;

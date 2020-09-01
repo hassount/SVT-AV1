@@ -170,7 +170,6 @@ The encoder parameters present in the `Sample.cfg` file are listed in this table
 | --- | --- | --- | --- | --- |
 | **OutputStatFile** | --output-stat-file | any string | Null | Output stat file for first pass|
 | **InputStatFile** | --input-stat-file | any string | Null | Input stat file for second pass|
-| **EncoderMode2p** | --enc-mode-2p | [0 - 8] | 8 | Encoder Preset [0,1,2,3,4,5,6,7,8] 0 = highest quality, 8 = highest speed. Passed to encoder's first pass to use the ME settings of the second pass to achieve better bdRate|
 | **VBRBiasPct** | --bias-pct | [0 - 100] | 50 | 2pass CBR/VBR bias percent (0=CBR, 100=VBR) |
 | **MinSectionPct** | --minsection-pct | [0 - ] | 0 | 2pass VBR GOP min bitrate (percent of target) |
 | **MaxSectionPct** | --maxsection-pct | [0 - ] | 2000 | 2pass VBR GOP max bitrate (percent of target) |
@@ -191,8 +190,9 @@ The encoder parameters present in the `Sample.cfg` file are listed in this table
 | **TileRow** | --tile-rows | [0-6] | 0 | log2 of tile rows |
 | **TileCol** | --tile-columns | [0-6] | 0 | log2 of tile columns |
 | **QP** | -q | [0 - 63] | 50 | Quantization parameter used when RateControl is set to 0 |
-| **LookAheadDistance** | --lookahead | [0 - 120] | 33 | When Rate Control is set to 1 it&#39;s best to set this parameter to be equal to the Intra period value (such is the default set by the encoder) [this value is capped by the encoder to its maximum need e.g. 33 for CQP, 2*fps for rate control] |
+| **LookAheadDistance** | --lookahead | [0 - 120] | 33 | When RateControlMode is set to 1 or 2 it's strongly recommended to set this parameter to be equal to the Intra period value (such is the default set by the encoder). When RateControlMode  is set to 0, it is recommended for this value to be set to a size of a minigop (e.g. 16 for --hierarchichal-levels 4) |
 | **LoopFilterDisable** | --disable-dlf | [0-1, 0 for default] | 0 | Disable loop filter(0: loop filter enabled[default] ,1: loop filter disabled) |
+| **EnableTPLModel** | --enable-tpl-la | [0-1, 0 for default] | 0 | RDO based on frame temporal dependency (0: off, 1: backward source based)|
 | **CDEFLevel** | --cdef-level | [0-5, -1 for default] | -1 | CDEF Level, 0: OFF, 1-5: ON with 64,16,8,4,1 step refinement, -1: DEFAULT|
 | **RestorationFilter** | --enable-restoration-filtering | [0/1, -1 for default] | -1 | Enable restoration filtering , 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **SelfGuidedFilterMode** | --sg-filter-mode | [0-4,  -1 for default] | -1 | Self-guided filter mode (0:OFF, 1: step 0, 2: step 1, 3: step 4, 4: step 16, -1: DEFAULT)|
@@ -200,27 +200,23 @@ The encoder parameters present in the `Sample.cfg` file are listed in this table
 | **Mfmv** | --enable-mfmv | [0/1, -1 for default] | -1 | Enable motion field motion vector, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **RedundantBlock** | --enable-redundant-blk | [0/1, -1 for default] | -1 | Enable redundant block skipping same neighbors non-square partitions, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **SpatialSSEfl** | --enable-spatial-sse-full-loop-level | [0/1, -1 for default] | -1 | Enable spatial sse full loop, 0 = OFF, 1 = ON, -1 = DEFAULT|
-| **Subpel** | --subpel | [0/1, -1 for default] | -1 | Enable subpel, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **OverBoundryBlock** | --enable-over-bndry-blk | [0/1, -1 for default] | -1 | Enable over boundary block mode, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **NewNearestCombInjection** | --enable-new-nrst-near-comb | [0/1, -1 for default] | -1 | Enable new nearest near comb injection, 0 = OFF, 1 = ON, -1 = DEFAULT|
-| **PruneUnipredMe** | --enable-prune-unipred-me | [0/1, -1 for default] | -1 | Enable prune unipred at me, 0 = OFF, 1 = ON, -1 = DEFAULT|
-| **PruneRefRecPart** | --enable-prune-ref-rec-part | [0/1, -1 for default] | -1 | Enable prune prune ref frame for rec partitions, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **NsqTable** | --enable-nsq-table-use | [0/1, -1 for default] | -1 | Enable nsq table, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **FrameEndCdfUpdate** | --enable-framend-cdf-upd-mode | [0/1, -1 for default] | -1 | Enable frame end cdf update mode, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **ChromaMode** | --chroma-mode | [0-3, -1 for default] | -1 | Chroma Mode <br>-1 = DEFAULT<br>0 = Full chroma search @ MD  <br>1 = Fast chroma search @ MD  <br>2 = Chroma blind @ MD + CFL @ EP <br>3 = Chroma blind @ MD + no CFL @ EP |
 | **DisableCfl** | --disable-cfl | [0/1, -1 for default] | -1 | Disable chroma from luma (CFL), 0 = OFF (do not disable), 1 = ON (disable), -1 = DEFAULT|
 | **LocalWarpedMotion** | --enable-local-warp | [0 - 1] | 0 | Enable warped motion use , 0 = OFF, 1 = ON |
 | **GlobalMotion** | --enable-global-motion | [0-1, 1 for default] | 1 | Enable global motion (0: OFF, 1: ON [default]) |
-| **CombineClass12** | --enable-class-12 | [0/1, -1 for default] | -1 | Enable combine Mode decision Classes 1 and 2 (inter classes), 0 = OFF, 1 = ON, -1 = DEFAULT|
-| **EdgeSkipAngleIntra** | --enable-intra-edge-skp | [0/1, -1 for default] | -1 | Enable skip angle intra based on edge, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **PicBasedRateEst** | --enable-pic-based-rate-est | [0/1, -1 for default] | -1 | Enable picture based rate estimation. Only active with lp 1 (0: OFF, 1: ON, -1: DEFAULT)|
 | **IntraAngleDelta** | --enable-intra-angle-delta | [0/1, -1 for default] | -1 | Enable intra angle delta filtering (0: OFF, 1: ON, -1 = DEFAULT |
 | **InterIntraCompound** | --enable-interintra-comp | [0/1, -1 for default] | -1 | Enable inter intra compound, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **Paeth** | --enable-paeth | [0/1, -1 for default] | -1 | Enable Intra Paeth pred, 0 = OFF, 1 = ON, -1 = DEFAULT|
 | **Smooth** | --enable-smooth | [0/1, -1 for default] | -1 | Enable Intra Smooth pred, 0 = OFF, 1 = ON, -1 = DEFAULT|
-| **Obmc** | --enable-obmc | [0-1, 1 for default] | 1 | Enable OBMC(0: OFF, 1: ON[default]) |
+| **MultiReferencePictures** | --mrp-level | [0-9, -1 for default] | -1 | Multi reference frame levels( 0: OFF, 1: FULL, 2: Level1 .. 9: Level8,  -1: DEFAULT)|
+| **Obmc** | --obmc-level | [0-3, -1 for default] | 1 | OBMC Level(0: OFF, 1: Fully ON, 2 and 3 are faster levels, -1: DEFAULT) |
 | **RDOQ** | --rdoq-level | [0/1, -1 for default] | -1 | Enable RDOQ, 0 = OFF, 1 = ON, -1 = DEFAULT |
-| **FilterIntra** | --enable-filter-intra | [0-1, 1 for default] | 1 | Enable filter intra prediction mode (0: OFF, 1: ON [default]) |
+| **FilterIntra** | --filter-intra-level | [0-1, 1 for default] | 1 | Enable filter intra prediction mode (0: OFF, 1: ON [default]) |
 | **IntraEdgeFilter** | --enable-intra-edge-filter | [0/1, -1 for default] | -1 | Enable intra edge filter (0: OFF, 1: ON, -1: DEFAULT)|
 | **PredMe** | --pred-me | [0-5, -1 for default] | -1 | Closed loop motion search. Set predictive me level: <BR>-1 = DEFAULT<BR>0 = OFF <BR>1 = 7x5 full-pel search + sub-pel refinement off <BR>2 = 7x5 full-pel search +  (H + V) sub-pel refinement only = 4 half-pel + 4 quarter-pel = 8 positions + pred_me_distortion to pa_me_distortion deviation on <BR>3 = 7x5 full-pel search +  (H + V + D only ~ the best) sub-pel refinement = up to 6 half-pel + up to 6  quarter-pel = up to 12 positions + pred_me_distortion to pa_me_distortion deviation on <BR>4 = 7x5 full-pel search +  (H + V + D) sub-pel refinement = 8 half-pel + 8 quarter-pel = 16 positions + pred_me_distortion to pa_me_distortion deviation on <BR>5 = 7x5 full-pel search +  (H + V + D) sub-pel refinement = 8 half-pel + 8 quarter-pel = 16 positions + pred_me_distortion to pa_me_distortion deviation off |
 | **Bipred3x3** | --bipred-3x3 | [0-2, -1 for default] | -1 | Set bipred3x3 injection, 0 = OFF, 1 = ON FULL, 2 = Reduced set, -1 = DEFAULT|

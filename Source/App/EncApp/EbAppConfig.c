@@ -1415,7 +1415,7 @@ void eb_config_ctor(EbConfig *config_ptr) {
     config_ptr->qp                  = 50;
     config_ptr->use_qp_file         = EB_FALSE;
     config_ptr->look_ahead_distance = (uint32_t)~0;
-    config_ptr->enable_tpl_la       = 1;
+    config_ptr->enable_tpl_la       = 0;
     config_ptr->target_bit_rate     = 7000000;
     config_ptr->max_qp_allowed      = 63;
     config_ptr->min_qp_allowed      = 10;
@@ -1428,7 +1428,7 @@ void eb_config_ctor(EbConfig *config_ptr) {
     config_ptr->under_shoot_pct     = 25;
     config_ptr->over_shoot_pct      = 25;
     config_ptr->intra_period                              = -2;
-    config_ptr->intra_refresh_type                        = 1;
+    config_ptr->intra_refresh_type                        = 2;
     config_ptr->hierarchical_levels                       = 4;
     config_ptr->pred_structure                            = 2;
     config_ptr->enable_global_motion                      = EB_TRUE;
